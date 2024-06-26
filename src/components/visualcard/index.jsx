@@ -12,30 +12,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "../ui/badge";
-const handleDownload = async (url) => {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
 
-    const a = document.createElement("a");
-    a.href = window.URL.createObjectURL(blob);
-    a.download = ""; 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } catch (error) {
-    console.error("Error downloading file:", error);
-  }
-};
 
 export function VisualCard({ className, ...props }) {
   return (
     <Card
       key={props.key}
-      className={cn(
-        "w-[380px]  flex  flex-col justify-between",
-        className
-      )}
+      className={cn("w-[380px]  flex  flex-col justify-between", className)}
       {...props}
     >
       <CardHeader className="gap-2">
@@ -43,15 +26,22 @@ export function VisualCard({ className, ...props }) {
           <AvatarImage src={props.data.icon_url} />
           <AvatarFallback>{props.data.title.slice(0, 2)}</AvatarFallback>
         </Avatar>
-   
+
         <CardTitle>{props.data.title}</CardTitle>
         <CardDescription>{props.data.description}</CardDescription>
         <div className="flex gap-1 flex-wrap ">
-            {props.data.categories.map((cat, idx) => {
-   
-              return <Badge className="h-fit w-fit p-1 rounded-sm" key={idx} variant={"outline"}>{cat.Title}</Badge>;
-            })}
-          </div>
+          {props.data.categories.map((cat, idx) => {
+            return (
+              <Badge
+                className="h-fit w-fit p-1 rounded-sm"
+                key={idx}
+                variant={"outline"}
+              >
+                {cat.Title}
+              </Badge>
+            );
+          })}
+        </div>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className=" flex items-center flex-col  rounded-md border p-4">
@@ -86,33 +76,24 @@ export function VisualCard({ className, ...props }) {
             </p>
           </div>
         </div>
-      
       </CardContent>
       <CardFooter>
-      
-        <Button className="w-full" onClick={handleDownload(props.data.url)}>
-          <Download className="mr-2 h-4 w-4" /> Download
+        <Button className="w-full">
+          <Download className="mr-2 h-4 w-4" />
+          <a href={props.data.url} download>
+            Download
+          </a>
         </Button>
-      
       </CardFooter>
 
       <div className="flex justify-center gap-4 mb-5">
-        <a
-          className="muted underline text-xs "
-          href={props.data.privacy}
-        >
+        <a className="muted underline text-xs " href={props.data.privacy}>
           Privacy Policy
         </a>
-        <a
-          className="muted underline text-xs "
-          href={props.data.support}
-        >
+        <a className="muted underline text-xs " href={props.data.support}>
           Support
         </a>
-        <a
-          className="muted underline text-xs "
-          href={props.data.license}
-        >
+        <a className="muted underline text-xs " href={props.data.license}>
           License
         </a>
       </div>
